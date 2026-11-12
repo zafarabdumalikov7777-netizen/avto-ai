@@ -449,7 +449,14 @@
   .body p+p,.body p+ul,.body p+ol,.body ul+p,.body ol+p{margin-top:8px}
   .body ul,.body ol{padding-left:22px;margin:4px 0}
   .body li+li{margin-top:3px}
-  .body code{font-size:.92em;background:var(--bg2);padding:1px 6px;border-radius:6px}
+  .body code{font-size:.92em;background:var(--bg2);padding:1px 6px;border-radius:6px;font-family:ui-monospace,Consolas,Menlo,monospace}
+  .body .mdh{font-weight:800;font-size:1.06em;margin-top:12px}
+  .body .codeblk{margin:10px 0;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#0b1020;max-width:100%}
+  .body .codehd{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;background:#141b33;color:#9fb0d8;font-size:12px;font-weight:600}
+  .body .codecp{background:none;border:1px solid #2c3966;color:#cfd9f5;border-radius:8px;padding:3px 10px;font:inherit;cursor:pointer}
+  .body .codecp:hover{background:#22305a}
+  .body .codeblk pre{margin:0;padding:12px 14px;overflow-x:auto;max-width:100%}
+  .body .codeblk code{background:none;padding:0;color:#e6ecff;font-size:13px;line-height:1.55;white-space:pre;display:block}
   .body .warn{display:block;margin-top:10px;padding:8px 12px;border-radius:10px;background:color-mix(in srgb,var(--gold) 16%,var(--surface));font-size:14px;font-weight:600}
   .streaming .body > :last-child::after{content:"";display:inline-block;width:8px;height:16px;margin-left:3px;vertical-align:-2px;background:var(--green);border-radius:2px;animation:blinkc .9s steps(2) infinite}
   @keyframes blinkc{50%{opacity:0}}
@@ -1114,8 +1121,11 @@ Qoidalar:
 - Har doim o'zbek tilida, LOTIN yozuvida javob ber, foydalanuvchi kirillda yoki ruscha yozsa ham. Faqat foydalanuvchi boshqa tilni aniq so'rasa yoki tarjima kerak bo'lsa, boshqa tildan foydalan.
 - Birinchi jumlada savolga to'g'ridan-to'g'ri javob ber, keyin kerak bo'lsa qisqa izoh qo'sh. Kirish so'zlari, savolni qaytarish va keraksiz takror yozma.
 - Sodda, aniq va do'stona yoz.
-- Javobni qisqa tut: odatda 3-8 jumla yoki qisqa ro'yxat. Foydalanuvchi batafsil so'rasa, kengroq yoz.
-- Formatlash: faqat **qalin** matn va ro'yxatlar ("- " yoki "1. "). Sarlavha (#), jadval va kod blokidan foydalanma.
+- Sen hayotdagi DEYARLI HAR QANDAY sohani chuqur bilasan va amaliy yordam berasan: dasturlash (Python, JavaScript, HTML/CSS, C++, Java, SQL, mobil ilovalar, o'yinlar, botlar), video montaj (CapCut, Premiere Pro, DaVinci Resolve, After Effects, VN, Alight Motion), foto va dizayn (Photoshop, Figma, Canva), musiqa va ovoz, SMM va bloggerlik, maktab va universitet fanlari, chet tillari, biznes va moliya, huquq asoslari, sog'lom turmush, sport, oshpazlik, ta'mirlash, texnika, avtomobil, qishloq xo'jaligi, psixologiya, tarix, din va madaniyat, kundalik hayot. "Men buni bilmayman" deb qochma: bilganingni to'liq, mutaxassis darajasida tushuntir.
+- Oddiy savolga qisqa javob ber (3-8 jumla). Kod, qo'llanma, montaj yoki boshqa amaliy ish so'ralsa, TO'LIQ va ishlaydigan javob ber: hajmni cheklama, hech narsani "..." bilan qisqartirma.
+- Kod so'ralsa: to'liq, ishga tushadigan kodni kod bloki ichida yoz (uch teskari tirnoq va til nomi bilan), keyin qisqa qilib qanday ishga tushirishni tushuntir. Kod ichidagi izohlarni o'zbekcha yoz. Xato topish so'ralsa, sababini ayt va tuzatilgan to'liq kodni ber.
+- Dastur bilan ishlash (montaj, dizayn, ofis dasturlari) so'ralsa: aniq qadamlar ber: qaysi menyu, qaysi tugma, qaysi sozlama va qiymat. Dastur tugmalarining nomini dasturdagi tilda (inglizcha) qoldir.
+- Formatlash: **qalin** matn, ro'yxatlar ("- " yoki "1. "), kerak bo'lsa "## " bilan qisqa sarlavha va kod bloklari. Jadvaldan foydalanma.
 - O'zbekiston kontekstini hisobga ol: pul birligi so'm, viloyatlar, mahalla, mahalliy odatlar.
 - Narx, qonun, soliq, muddat yoki sog'liq kabi o'zgaruvchan yoki muhim ma'lumot bo'lsa, javob oxiriga alohida qatorda "⚠️ Bu ma'lumotni rasmiy manbadan tekshiring." deb yoz.
 - Bilmasang yoki ishonching komil bo'lmasa, buni ochiq ayt, to'qib chiqarma.
@@ -1132,6 +1142,12 @@ const MODES = {
   umumiy:{icon:"💬", name:"Umumiy", title:"Umumiy yordamchi", short:"Har qanday savolga javob",
     prompt:"Foydalanuvchining istalgan savoliga yordam ber.",
     sugs:["Sun'iy intellekt nima? Oddiy tushuntir","Ertalab erta turish uchun 5 ta maslahat","Qishda uyni qanday qilib issiq saqlash mumkin?"]},
+  kod:{icon:"💻", name:"Dasturchi", title:"Dasturchi", short:"Kod yozadi va xatoni tuzatadi",
+    prompt:"Sen tajribali katta dasturchisan. Istalgan dasturlash tilida to'liq, toza va ishlaydigan kod yoz: sayt, bot, o'yin, mobil ilova, skript, ma'lumotlar bazasi. Kodni kod blokida ber, izohlarni o'zbekcha yoz, keyin qanday ishga tushirishni qisqa tushuntir. Xato yuborilsa: sababini top, tushuntir va tuzatilgan to'liq kodni ber. Yangi boshlovchiga har qatorni sodda tushuntir.",
+    sugs:[]},
+  montaj:{icon:"🎬", name:"Montaj", title:"Montaj va ijod", short:"Video, foto, dizayn, kontent",
+    prompt:"Sen professional video montajchi, dizayner va kontent yaratuvchisan. CapCut, Premiere Pro, DaVinci Resolve, After Effects, VN, Alight Motion, Photoshop, Figma, Canva dasturlarini mukammal bilasan. Qadam-baqadam aniq ko'rsatma ber: qaysi menyu, qaysi tugma, qaysi effekt va qanday qiymat. Rang korreksiyasi, o'tishlar, ovoz, subtitr, eksport sozlamalari, Reels/TikTok/YouTube formatlari, ssenariy va kadr rejasi bo'yicha yordam ber. Foydalanuvchi qaysi dasturda ishlashini aytmagan bo'lsa, telefon uchun CapCut va kompyuter uchun Premiere Pro misolida tushuntir.",
+    sugs:[]},
   ustoz:{icon:"📚", name:"Ustoz", title:"Ustoz", short:"Uy vazifasida yo'l ko'rsatadi",
     prompt:"Sen sabrli ustozsan. Uy vazifasi yoki masalada TAYYOR JAVOBNI DARHOL BERMA: yechish yo'lini bosqichma-bosqich tushuntir, o'quvchiga keyingi qadamni o'zi topishi uchun savol ber. O'quvchi o'z javobini yozsa, uni tekshirib, maqtab yoki xatosini tushuntir. Mavzuni tushuntirish so'ralsa, misol bilan tushuntir.",
     sugs:["Kasrlarni qo'shishni o'rgat: 1/2 + 1/3","Fotosintez nima? Bolaga tushuntir","Ko'paytirish jadvalini tez yodlash usuli"]},
@@ -1175,6 +1191,18 @@ const EFFORTS = {low:"Past", medium:"O'rta", high:"Yuqori"};
 const EFFORT_DESC = {low:"Tez javob", medium:"Muvozanat", high:"Chuqur o'ylaydi"};
 
 const SKILLS = [
+  {id:"kod", icon:"💻", name:"Kod yozish", desc:"Sayt, bot, o'yin yoki skript uchun tayyor kod",
+   prompt:"Foydalanuvchi so'ragan narsa uchun to'liq, ishlaydigan kod yoz. Til aytilmagan bo'lsa, vazifaga eng mos tilni tanla. Kodni kod blokida ber, izohlar o'zbekcha bo'lsin, oxirida qanday ishga tushirishni 2-3 qadamda tushuntir."},
+  {id:"xato", icon:"🐞", name:"Xatoni tuzatish", desc:"Koddagi xatoni topadi va tuzatadi",
+   prompt:"Foydalanuvchi yuborgan kod yoki xato matnini tahlil qil. Avval xato sababini sodda tushuntir, keyin tuzatilgan to'liq kodni kod blokida ber va nimani o'zgartirganingni qisqa ro'yxat qil."},
+  {id:"montaj", icon:"🎬", name:"Video montaj", desc:"CapCut, Premiere, DaVinci bo'yicha qadam-baqadam",
+   prompt:"Foydalanuvchi xohlagan video effekt yoki montaj ishini qadam-baqadam tushuntir: qaysi menyu, qaysi tugma, qaysi qiymat. Dastur aytilmagan bo'lsa, telefon uchun CapCut va kompyuter uchun Premiere Pro variantini ber. Oxirida eksport sozlamalarini ayt."},
+  {id:"ssenariy", icon:"🎥", name:"Video ssenariy", desc:"Reels, TikTok va YouTube uchun ssenariy",
+   prompt:"Berilgan mavzu uchun qisqa video ssenariysi yoz: birinchi 3 soniyadagi diqqat tortuvchi ilgak, kadrlar ketma-ketligi (har bir kadrda nima ko'rinadi va nima aytiladi), ekrandagi matn, musiqa kayfiyati va oxirida harakatga chaqiruv."},
+  {id:"dizayn", icon:"🎨", name:"Dizayn maslahati", desc:"Logo, banner, post uchun rang va shrift",
+   prompt:"Foydalanuvchining dizayn ishi uchun aniq maslahat ber: rang palitrasi (HEX kodlari bilan), shriftlar, joylashuv va o'lchamlar. Canva, Figma yoki Photoshop'da qanday qilishni qadam-baqadam tushuntir."},
+  {id:"ingliz", icon:"🇬🇧", name:"Ingliz tili", desc:"So'z, grammatika va suhbat mashqi",
+   prompt:"Sen ingliz tili o'qituvchisisan. Foydalanuvchi so'ragan mavzuni o'zbekcha tushuntir, 3-5 ta misol ber (inglizcha va tarjimasi bilan) va oxirida 3 ta kichik mashq ber. Foydalanuvchi inglizcha yozsa, xatolarini muloyim tuzat."},
   {id:"tahrir", icon:"✍️", name:"Matnni tahrirlash", desc:"Imlo, tinish belgilari va uslubni tuzatadi",
    prompt:"Foydalanuvchi bergan matnning imlo, tinish belgilari va uslub xatolarini tuzat. Avval tuzatilgan to'liq matnni ber, keyin 'O'zgarishlar:' deb asosiy tuzatishlarni qisqa ro'yxat qil."},
   {id:"qisqa", icon:"📄", name:"Qisqacha mazmun", desc:"Uzun matn yoki faylni 5 ta asosiy fikrga qisqartiradi",
@@ -1199,7 +1227,7 @@ const SKILLS = [
 
 const FEATURES = [
   ["🧠","Xotira","Siz haqingizdagi muhim narsalarni eslab qoladi. Xohlasangiz ko'rasiz, o'chirasiz yoki xotirani o'chirib qo'yasiz."],
-  ["✦","Ko'nikmalar","10 ta tayyor ko'nikma: tahrir, test, rezyume, tabrik va boshqalar. O'z ko'nikmangizni ham yaratasiz."],
+  ["✦","Ko'nikmalar","16 ta tayyor ko'nikma: kod, montaj, tahrir, test, rezyume, tabrik va boshqalar. O'z ko'nikmangizni ham yaratasiz."],
   ["⚙️","Model tanlash","Tez, Pro yoki Max model va fikrlash darajasi. Yoki Avto: o'zi tanlaydi."],
   ["🖼️","Rasm va fayl","Uy vazifasi rasmini yuboring yoki matn faylni biriktiring, AMDX AI uni o'qib javob beradi."],
   ["🎙️","Ovoz bilan","Yozish o'rniga gapiring, javobni esa ovoz bilan tinglang."],
@@ -1292,9 +1320,23 @@ const DEMO_NOTE = "Hozir AMDX AI sun'iy intellektga ulanmagan, shuning uchun sav
 
 /* ---------- markdown ---------- */
 function md(t){
-  const lines = esc(t.replace(/\r/g, "")).split("\n");
+  const parts = String(t).replace(/\r/g, "").split(/```/);
+  let out = "";
+  parts.forEach((p, i) => {
+    if(i % 2){
+      const nl = p.indexOf("\n");
+      let lang = nl > -1 ? p.slice(0, nl).trim() : "", code = nl > -1 ? p.slice(nl + 1) : p;
+      if(!/^[\w+#.-]{0,16}$/.test(lang)){ code = p; lang = ""; }
+      code = code.replace(/\s+$/, "");
+      if(code) out += `<div class="codeblk" data-notr><div class="codehd"><span>${esc(lang || "kod")}</span><button type="button" class="codecp">Nusxa olish</button></div><pre><code>${esc(code)}</code></pre></div>`;
+    } else out += mdText(p);
+  });
+  return out || "<p></p>";
+}
+function mdText(t){
+  const lines = esc(t).split("\n");
   let html = "", list = null;
-  const inline = s => s.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
+  const inline = s => s.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code data-notr>$1</code>");
   const close = () => { if(list){ html += `</${list}>`; list = null; } };
   for(const raw of lines){
     const l = raw.trim();
@@ -1303,13 +1345,14 @@ function md(t){
     if((m = l.match(/^[-*•]\s+(.*)/))){ if(list !== "ul"){ close(); html += "<ul>"; list = "ul"; } html += `<li>${inline(m[1])}</li>`; continue; }
     if((m = l.match(/^\d+[.)]\s+(.*)/))){ if(list !== "ol"){ close(); html += "<ol>"; list = "ol"; } html += `<li>${inline(m[1])}</li>`; continue; }
     close();
-    const hh = l.replace(/^#+\s*/, "");
-    html += hh.startsWith("⚠️") ? `<p class="warn">${inline(hh)}</p>` : `<p>${inline(hh)}</p>`;
+    if((m = l.match(/^#+\s*(.*)/))){ html += `<p class="mdh">${inline(m[1])}</p>`; continue; }
+    html += l.startsWith("⚠️") ? `<p class="warn">${inline(l)}</p>` : `<p>${inline(l)}</p>`;
   }
   close();
-  return html || "<p></p>";
+  return html;
 }
-const plain = t => t.replace(/\*\*(.+?)\*\*/g, "$1").replace(/`([^`]+)`/g, "$1").replace(/^\s*[-*•]\s+/gm, "").replace(/^#+\s*/gm, "");
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".codecp"); if(b){ const c = b.closest(".codeblk").querySelector("code"); copyText(c.textContent); } });
+const plain = t => t.replace(/```[\s\S]*?(```|$)/g, " (kod) ").replace(/\*\*(.+?)\*\*/g, "$1").replace(/`([^`]+)`/g, "$1").replace(/^\s*[-*•]\s+/gm, "").replace(/^#+\s*/gm, "");
 
 /* ---------- message rendering ---------- */
 function scrollMsgs(force){ const b = $("msgs"); if(force || b.scrollHeight - b.scrollTop - b.clientHeight < 140) b.scrollTop = b.scrollHeight; }
@@ -1489,9 +1532,10 @@ function chooseModel(text){
   let key = "pro", effort = "medium";
   if(MODE === "tarjimon" || (MODE === "umumiy" && len < 90 && !FILES.length && !SKILL)){ key = "tez"; effort = "low"; }
   if(MODE === "biznes" || (SKILL && ["masala","reja","rezyume"].includes(SKILL.id))){ key = "pro"; effort = "high"; }
+  if(MODE === "kod" || MODE === "montaj" || (SKILL && ["kod","xato","montaj","ssenariy","dizayn"].includes(SKILL.id)) || /kod|dastur|python|javascript|html|css|sayt|bot yoz|xato|bug|sql|montaj|capcut|premiere|davinci|photoshop|figma|effekt/.test(t)){ key = "pro"; effort = "medium"; }
   if(len > 1500 || /tahlil|batafsil|biznes reja|strategiya|isbotla|murakkab/.test(t)){ key = "max"; effort = "high"; }
   if(!hasAccess(key)){ key = PLAN === "pro" ? "pro" : "tez"; }
-  if(key === "tez") effort = len > 400 ? "medium" : "low";   // fastest path for everyday questions   // Avto never spends a free try
+  if(key === "tez") effort = (len > 400 || effort !== "low") ? "medium" : "low";   // fastest path for everyday questions   // Avto never spends a free try
   return {key, effort, auto:true};
 }
 function buildInput(){
