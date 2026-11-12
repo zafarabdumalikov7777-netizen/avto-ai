@@ -450,6 +450,11 @@
   .body ul,.body ol{padding-left:22px;margin:4px 0}
   .body li+li{margin-top:3px}
   .body code{font-size:.92em;background:var(--bg2);padding:1px 6px;border-radius:6px;font-family:ui-monospace,Consolas,Menlo,monospace}
+  .body .aiimg{margin:10px 0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0b1020;max-width:560px}
+  .body .aiimg img{display:block;width:100%;height:auto}
+  .body .aiimgdl{display:block;padding:8px 12px;font-size:13px;font-weight:700;color:#cfd9f5;background:#141b33;text-decoration:none}
+  .body .aiimgdl:hover{background:#22305a}
+  .body .aidraw{padding:18px;border-radius:14px;border:1.5px dashed var(--line);font-weight:700;text-align:center}
   .body .mdh{font-weight:800;font-size:1.06em;margin-top:12px}
   .body .codeblk{margin:10px 0;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#0b1020;max-width:100%}
   .body .codehd{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;background:#141b33;color:#9fb0d8;font-size:12px;font-weight:600}
@@ -1125,6 +1130,7 @@ Qoidalar:
 - Oddiy savolga qisqa javob ber (3-8 jumla). Kod, qo'llanma, montaj yoki boshqa amaliy ish so'ralsa, TO'LIQ va ishlaydigan javob ber: hajmni cheklama, hech narsani "..." bilan qisqartirma.
 - Kod so'ralsa: to'liq, ishga tushadigan kodni kod bloki ichida yoz (uch teskari tirnoq va til nomi bilan), keyin qisqa qilib qanday ishga tushirishni tushuntir. Kod ichidagi izohlarni o'zbekcha yoz. Xato topish so'ralsa, sababini ayt va tuzatilgan to'liq kodni ber.
 - Dastur bilan ishlash (montaj, dizayn, ofis dasturlari) so'ralsa: aniq qadamlar ber: qaysi menyu, qaysi tugma, qaysi sozlama va qiymat. Dastur tugmalarining nomini dasturdagi tilda (inglizcha) qoldir.
+- RASM CHIZISH: sen rasm chiza olasan. Foydalanuvchi rasm, logo, banner, poster, sxema chizishni yoki yuborgan rasmini o'zgartirishni (masalan mashinasini tuning qilish, xonani bezash, rang o'zgartirish) so'rasa, HECH QACHON "qila olmayman" dema. Buning o'rniga: 1) rasm yuborilgan bo'lsa, unda nimani ko'rayotganingni bir jumlada ayt; 2) natijani o'zing chiz: \`\`\`svg kod bloki ichida to'liq, chiroyli, batafsil SVG rasm yoz (viewBox="0 0 800 500", gradientlar, soyalar, yorug'lik, mayda detallar bilan; matn kam bo'lsin; <script> va tashqi havolalar ishlatma); 3) rasmdan keyin nimalarni o'zgartirganingni qisqa ro'yxat qil. Tuning so'ralsa, qo'shimcha ravishda haqiqiy tuning rejasini ber: disklar, obves, rang yoki plyonka, optika, salon, taxminiy narxlar so'mda. Bu chizilgan illyustratsiya ekanini, fotosuratning o'zi tahrirlanmaganini bir jumlada halol ayt. SVG kodini foydalanuvchiga tushuntirma, u rasm bo'lib ko'rinadi.
 - Formatlash: **qalin** matn, ro'yxatlar ("- " yoki "1. "), kerak bo'lsa "## " bilan qisqa sarlavha va kod bloklari. Jadvaldan foydalanma.
 - O'zbekiston kontekstini hisobga ol: pul birligi so'm, viloyatlar, mahalla, mahalliy odatlar.
 - Narx, qonun, soliq, muddat yoki sog'liq kabi o'zgaruvchan yoki muhim ma'lumot bo'lsa, javob oxiriga alohida qatorda "⚠️ Bu ma'lumotni rasmiy manbadan tekshiring." deb yoz.
@@ -1191,6 +1197,10 @@ const EFFORTS = {low:"Past", medium:"O'rta", high:"Yuqori"};
 const EFFORT_DESC = {low:"Tez javob", medium:"Muvozanat", high:"Chuqur o'ylaydi"};
 
 const SKILLS = [
+  {id:"rasm", icon:"🖼️", name:"Rasm chizish", desc:"Logo, poster, banner yoki istalgan rasm chizadi",
+   prompt:"Foydalanuvchi so'ragan narsani \`\`\`svg kod bloki ichida to'liq, chiroyli va batafsil SVG rasm qilib chiz (viewBox=\"0 0 800 500\", gradientlar, soyalar, mayda detallar). Rasmdan keyin 1-2 jumlada nima chizganingni ayt va nimani o'zgartirish mumkinligini so'ra."},
+  {id:"tuning", icon:"🚗", name:"Avto tuning", desc:"Mashinangiz rasmi bo'yicha tuning loyihasi va chizmasi",
+   prompt:"Foydalanuvchi mashinasi rasmi yoki modelini beradi. Mashinani aniqlab, tuning qilingan ko'rinishini \`\`\`svg kod blokida yon tomondan batafsil chiz (past osma, katta disklar, obves, spoyler, tonirovka, chiroqlar, rang). Keyin tuning rejasini ber: har bir detal, O'zbekistondagi taxminiy narxi so'mda va umumiy summa. Bu chizma ekanini bir jumlada ayt."},
   {id:"kod", icon:"💻", name:"Kod yozish", desc:"Sayt, bot, o'yin yoki skript uchun tayyor kod",
    prompt:"Foydalanuvchi so'ragan narsa uchun to'liq, ishlaydigan kod yoz. Til aytilmagan bo'lsa, vazifaga eng mos tilni tanla. Kodni kod blokida ber, izohlar o'zbekcha bo'lsin, oxirida qanday ishga tushirishni 2-3 qadamda tushuntir."},
   {id:"xato", icon:"🐞", name:"Xatoni tuzatish", desc:"Koddagi xatoni topadi va tuzatadi",
@@ -1227,7 +1237,7 @@ const SKILLS = [
 
 const FEATURES = [
   ["🧠","Xotira","Siz haqingizdagi muhim narsalarni eslab qoladi. Xohlasangiz ko'rasiz, o'chirasiz yoki xotirani o'chirib qo'yasiz."],
-  ["✦","Ko'nikmalar","16 ta tayyor ko'nikma: kod, montaj, tahrir, test, rezyume, tabrik va boshqalar. O'z ko'nikmangizni ham yaratasiz."],
+  ["✦","Ko'nikmalar","18 ta tayyor ko'nikma: kod, montaj, rasm chizish, tuning, tahrir, test, rezyume, tabrik va boshqalar. O'z ko'nikmangizni ham yaratasiz."],
   ["⚙️","Model tanlash","Tez, Pro yoki Max model va fikrlash darajasi. Yoki Avto: o'zi tanlaydi."],
   ["🖼️","Rasm va fayl","Uy vazifasi rasmini yuboring yoki matn faylni biriktiring, AMDX AI uni o'qib javob beradi."],
   ["🎙️","Ovoz bilan","Yozish o'rniga gapiring, javobni esa ovoz bilan tinglang."],
@@ -1328,6 +1338,14 @@ function md(t){
       let lang = nl > -1 ? p.slice(0, nl).trim() : "", code = nl > -1 ? p.slice(nl + 1) : p;
       if(!/^[\w+#.-]{0,16}$/.test(lang)){ code = p; lang = ""; }
       code = code.replace(/\s+$/, "");
+      if(lang.toLowerCase() === "svg" || /^\s*<svg[\s>]/i.test(code)){
+        if(/<\/svg>\s*$/i.test(code)){
+          let svg = code.trim(); if(!/xmlns=/.test(svg)) svg = svg.replace(/<svg/i, '<svg xmlns="http://www.w3.org/2000/svg"');
+          const uri = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+          out += `<div class="aiimg" data-notr><img src="${uri}" alt="AMDX AI chizgan rasm">${/github\.io$/.test(location.hostname) ? `<a class="aiimgdl" href="${uri}" download="amdx-rasm.svg">⬇ Rasmni yuklab olish</a>` : ""}</div>`;
+        } else out += `<p class="aidraw">🎨 Rasm chizilmoqda…</p>`;
+        return;
+      }
       if(code) out += `<div class="codeblk" data-notr><div class="codehd"><span>${esc(lang || "kod")}</span><button type="button" class="codecp">Nusxa olish</button></div><pre><code>${esc(code)}</code></pre></div>`;
     } else out += mdText(p);
   });
@@ -1352,7 +1370,7 @@ function mdText(t){
   return html;
 }
 document.addEventListener("click", e => { const b = e.target.closest && e.target.closest(".codecp"); if(b){ const c = b.closest(".codeblk").querySelector("code"); copyText(c.textContent); } });
-const plain = t => t.replace(/```[\s\S]*?(```|$)/g, " (kod) ").replace(/\*\*(.+?)\*\*/g, "$1").replace(/`([^`]+)`/g, "$1").replace(/^\s*[-*•]\s+/gm, "").replace(/^#+\s*/gm, "");
+const plain = t => t.replace(/```svg[\s\S]*?(```|$)/gi, " (rasm) ").replace(/```[\s\S]*?(```|$)/g, " (kod) ").replace(/\*\*(.+?)\*\*/g, "$1").replace(/`([^`]+)`/g, "$1").replace(/^\s*[-*•]\s+/gm, "").replace(/^#+\s*/gm, "");
 
 /* ---------- message rendering ---------- */
 function scrollMsgs(force){ const b = $("msgs"); if(force || b.scrollHeight - b.scrollTop - b.clientHeight < 140) b.scrollTop = b.scrollHeight; }
@@ -1532,7 +1550,7 @@ function chooseModel(text){
   let key = "pro", effort = "medium";
   if(MODE === "tarjimon" || (MODE === "umumiy" && len < 90 && !FILES.length && !SKILL)){ key = "tez"; effort = "low"; }
   if(MODE === "biznes" || (SKILL && ["masala","reja","rezyume"].includes(SKILL.id))){ key = "pro"; effort = "high"; }
-  if(MODE === "kod" || MODE === "montaj" || (SKILL && ["kod","xato","montaj","ssenariy","dizayn"].includes(SKILL.id)) || /kod|dastur|python|javascript|html|css|sayt|bot yoz|xato|bug|sql|montaj|capcut|premiere|davinci|photoshop|figma|effekt/.test(t)){ key = "pro"; effort = "medium"; }
+  if(MODE === "kod" || MODE === "montaj" || (SKILL && ["kod","xato","montaj","ssenariy","dizayn","rasm","tuning"].includes(SKILL.id)) || /kod|dastur|python|javascript|html|css|sayt|bot yoz|xato|bug|sql|montaj|capcut|premiere|davinci|photoshop|figma|effekt|rasm|chiz|tuning|logo|poster|banner/.test(t)){ key = "pro"; effort = "medium"; }
   if(len > 1500 || /tahlil|batafsil|biznes reja|strategiya|isbotla|murakkab/.test(t)){ key = "max"; effort = "high"; }
   if(!hasAccess(key)){ key = PLAN === "pro" ? "pro" : "tez"; }
   if(key === "tez") effort = (len > 400 || effort !== "low") ? "medium" : "low";   // fastest path for everyday questions   // Avto never spends a free try
