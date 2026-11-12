@@ -429,8 +429,11 @@
   .iconbtn{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px var(--line);transition:transform .3s var(--spring)}
   .iconbtn:hover{transform:rotate(-90deg);box-shadow:inset 0 0 0 1.5px var(--green)}
   .iconbtn svg{width:17px;height:17px}
-  .modes{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;border-bottom:1px solid var(--line);scrollbar-width:none}
-  .modes::-webkit-scrollbar{display:none}
+  .modes{display:flex;gap:8px;overflow-x:auto;padding:10px 16px 8px;border-bottom:1px solid var(--line);scrollbar-width:thin;scrollbar-color:var(--muted) transparent}
+  .modes::-webkit-scrollbar{height:8px}
+  .modes::-webkit-scrollbar-track{background:var(--bg);border-radius:8px;margin:0 16px}
+  .modes::-webkit-scrollbar-thumb{background:var(--muted);border-radius:8px}
+  .modes::-webkit-scrollbar-thumb:hover{background:var(--green)}
   .mode{white-space:nowrap;padding:7px 13px;border-radius:999px;border:1.5px solid var(--line);font-size:14px;font-weight:600;transition:all .25s var(--spring)}
   .mode:hover{border-color:var(--green);transform:translateY(-2px)}
   .mode.on{border-color:var(--green);background:var(--green-soft);color:var(--green-ink)}
@@ -1891,6 +1894,7 @@ function renderModes(){
     `<button type="button" class="mode ${k === MODE ? "on" : ""}" role="tab" aria-selected="${k === MODE}" data-m="${k}">${m.icon} ${m.name}</button>`).join("");
   $("modes").querySelectorAll(".mode").forEach(b => b.onclick = e => { setMode(b.dataset.m); FX.burst(e.clientX, e.clientY, 10, 3); });
 }
+$("modes").addEventListener("wheel", e => { const m = $("modes"); if(Math.abs(e.deltaY) > Math.abs(e.deltaX) && m.scrollWidth > m.clientWidth){ e.preventDefault(); m.scrollLeft += e.deltaY; } }, {passive:false});
 function setMode(k){
   if(busy || !MODES[k]) return;
   const changed = k !== MODE; MODE = k; renderModes();
