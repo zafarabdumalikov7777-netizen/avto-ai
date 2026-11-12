@@ -1233,8 +1233,8 @@ const hasAccess = k => !isPaid(k) || PLAN === "max" || (PLAN === "pro" && k === 
 const trialLeft = k => Math.max(0, TRIAL[k] || 0);
 const canUse = k => hasAccess(k) || trialLeft(k) > 0;
 function savePlan(){ try{ PLAN ? localStorage.setItem("amdx-plan", PLAN) : localStorage.removeItem("amdx-plan"); }catch(e){} }
-try{ const s = JSON.parse(localStorage.getItem("amdx-settings") || "{}"); if(MODELS[s.model] || s.model === "auto") MODEL = s.model; if(EFFORTS[s.effort]) EFFORT = s.effort; if(LEVELS[s.level]) LEVEL = s.level; }catch(e){}
-function saveSettings(){ try{ localStorage.setItem("amdx-settings", JSON.stringify({model:MODEL, effort:EFFORT, level:LEVEL})); }catch(e){} }
+try{ const s = JSON.parse(localStorage.getItem("avto-settings") || "{}"); if(MODELS[s.model] || s.model === "auto") MODEL = s.model; if(EFFORTS[s.effort]) EFFORT = s.effort; if(LEVELS[s.level]) LEVEL = s.level; }catch(e){}
+function saveSettings(){ try{ localStorage.setItem("avto-settings", JSON.stringify({model:MODEL, effort:EFFORT, level:LEVEL})); }catch(e){} }
 function newId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 const hasClaude = !!(window.claude && typeof window.claude.use === "function");
 const use = name => hasClaude ? window.claude.use(name).catch(() => null) : Promise.resolve(null);
@@ -1977,7 +1977,7 @@ function welcome(){
   addAI(`Assalomu alaykum! Men **AVTO AI**, mashinalar bo'yicha sun'iy intellektman.\n\n- Mashinangiz **rasmini** yuboring: tuning chizmasi va narxli reja beraman\n- **Nosozlikni** yozing: sababini, narxini va haydash xavfsizmi, aytaman\n- Yuqorida **rejim** tanlang: Tuning, Usta, Tanlov, Xarajat yoki YHQ\n- Mashinangiz modeli va yilini aytsangiz, eslab qolaman`);
   if(AI === null){ updateStatus.noted = true; addNote(DEMO_NOTE); }
 }
-const GH = "https://zafarabdumalikov7777-netizen.github.io/amdx-ai/";
+const GH = "https://zafarabdumalikov7777-netizen.github.io/avto-ai/";
 const onGH = /github\.io$/.test(location.hostname);
 const APP_URL = onGH ? "app.html" : GH + "app.html", SITE_URL = onGH ? "index.html" : GH;
 document.querySelectorAll('a[href="app.html"]').forEach(a => { a.href = APP_URL; if(!onGH) a.target = "_blank"; });
