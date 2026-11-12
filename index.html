@@ -1080,7 +1080,8 @@ $("themeBtn").onclick = (e) => {
 const BASE_PROMPT = `Sen "AMDX AI" nomli sun'iy intellekt yordamchisisan. O'zbekistondagi odamlar uchun yaratilgansan.
 Qoidalar:
 - Har doim o'zbek tilida, LOTIN yozuvida javob ber, foydalanuvchi kirillda yoki ruscha yozsa ham. Faqat foydalanuvchi boshqa tilni aniq so'rasa yoki tarjima kerak bo'lsa, boshqa tildan foydalan.
-- Sodda, aniq va do'stona yoz. Kirish so'zlarisiz, to'g'ridan-to'g'ri javob ber.
+- Birinchi jumlada savolga to'g'ridan-to'g'ri javob ber, keyin kerak bo'lsa qisqa izoh qo'sh. Kirish so'zlari, savolni qaytarish va keraksiz takror yozma.
+- Sodda, aniq va do'stona yoz.
 - Javobni qisqa tut: odatda 3-8 jumla yoki qisqa ro'yxat. Foydalanuvchi batafsil so'rasa, kengroq yoz.
 - Formatlash: faqat **qalin** matn va ro'yxatlar ("- " yoki "1. "). Sarlavha (#), jadval va kod blokidan foydalanma.
 - O'zbekiston kontekstini hisobga ol: pul birligi so'm, viloyatlar, mahalla, mahalliy odatlar.
@@ -1457,11 +1458,12 @@ function chooseModel(text){
   if(MODE === "tarjimon" || (MODE === "umumiy" && len < 90 && !FILES.length && !SKILL)){ key = "tez"; effort = "low"; }
   if(MODE === "biznes" || (SKILL && ["masala","reja","rezyume"].includes(SKILL.id))){ key = "pro"; effort = "high"; }
   if(len > 1500 || /tahlil|batafsil|biznes reja|strategiya|isbotla|murakkab/.test(t)){ key = "max"; effort = "high"; }
-  if(!hasAccess(key)){ key = PLAN === "pro" ? "pro" : "tez"; if(key === "tez" && effort === "high") effort = "medium"; }   // Avto never spends a free try
+  if(!hasAccess(key)){ key = PLAN === "pro" ? "pro" : "tez"; }
+  if(key === "tez") effort = len > 400 ? "medium" : "low";   // fastest path for everyday questions   // Avto never spends a free try
   return {key, effort, auto:true};
 }
 function buildInput(){
-  const h = history.slice(-14);
+  const h = history.slice(-8);
   while(h.length && h[0].role !== "user") h.shift();
   let sys = `${BASE_PROMPT}\n\nREJIM (${MODES[MODE].title}): ${MODES[MODE].prompt}\n\nTUSHUNTIRISH DARAJASI: ${LEVELS[LEVEL]}`;
   if(SKILL) sys += `\n\nKO'NIKMA "${SKILL.name}": ${SKILL.prompt}`;
@@ -1521,12 +1523,12 @@ async function send(text, opts = {}){
   const meta = `${pick.auto ? "Avto → " : ""}${M.label} · ${EFFORTS[pick.effort]} fikrlash${pick.trial ? " · bepul sinov" : ""}`;
   sendPick = pick;
   ctrl = new AbortController();
-  let shown = "", raf = 0;
+  let shown = "", raf = 0, tFirst = 0; const t0 = performance.now();
   const paint = () => { raf = 0; if(!el.classList.contains("streaming")) return; const body = el.querySelector(".body"); body.style.padding = ""; body.innerHTML = md(shown); scrollMsgs(); };
   el.classList.add("streaming");
   const callOpts = {
     signal: ctrl.signal, cache: false, modelTier: M.tier, model: M.model, effort: pick.effort,
-    onText: ({text}) => { if(text && text !== "Thinking...") { shown = text; if(!raf) raf = requestAnimationFrame(paint); } }
+    onText: ({text}) => { if(text && text !== "Thinking...") { if(!tFirst) tFirst = performance.now(); shown = text; if(!raf) raf = requestAnimationFrame(paint); } }
   };
   if(MEM.enabled) callOpts.tools = MEM_TOOLS;
   const imgs = files.filter(f => f.kind === "img" && f.blob).map(f => f.blob);
@@ -1534,7 +1536,8 @@ async function send(text, opts = {}){
   try{
     const res = await AI(buildInput(), callOpts);
     shown = (res && res.text) || shown;
-    finish(el, shown, true, meta);
+    const sec = s => (s / 1000).toFixed(1).replace(".", ",");
+    finish(el, shown, true, `${meta} · ⚡ ${sec((tFirst || performance.now()) - t0)} s da boshladi, ${sec(performance.now() - t0)} s da tugadi`);
   }catch(e){
     if(ctrl && ctrl.signal.aborted){
       finish(el, (shown ? shown + "\n\n" : "") + "(To'xtatildi)", !!shown, meta);
